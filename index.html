@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -125,4 +125,17 @@
 
       <h3>Why I Chose Matter.js</h3>
       <p>
-        For this assignment, I wanted to build a small interactive game without
+        For this assignment, I wanted to build a small interactive game without using a heavy 3D engine like Three.js or A-Frame. Coding gravity, bouncing, and block collisions from scratch in plain JavaScript takes a lot of math and time, so I chose <strong>Matter.js</strong>, a lightweight 2D physics library.
+      </p>
+      <p>
+        This prototype shows a few things Matter.js handles well out of the box:
+      </p>
+      <ul>
+        <li><strong>Slingshot Physics:</strong> Using <code>Matter.Constraint</code>, I attached the boulder to a giant wooden slingshot so users can pull and release it with elastic tension.</li>
+        <li><strong>Realistic Castle Collisions:</strong> Each stone wall, wooden beam, and tower roof has its own weight and friction, so hitting the base naturally collapses the upper towers.</li>
+        <li><strong>Custom Canvas Rendering &amp; Live Gravity:</strong> By pairing Matter.js's physics engine with a custom HTML5 canvas loop, I layered stone textures, a flying background dragon that never interferes with physics collisions, and real-time gravity controls.</li>
+      </ul>
+
+      <h3>Opportunities Beyond This Prototype</h3>
+      <p>
+        Right
