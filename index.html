@@ -3,204 +3,249 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Assignment 3 — Lunar Asteroid Toss (Matter.js)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <title>Lunar Asteroid Toss — Matter.js Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #f5efe6;
-      background-image: radial-gradient(#d6cbb8 1px, transparent 1px);
-      background-size: 20px 20px;
-      color: #18181b;
-      line-height: 1.6;
-      padding: 2rem 1rem 4rem;
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: #070913;
+      background-image:
+        radial-gradient(circle at 18% 15%, rgba(56, 189, 248, 0.12), transparent 38%),
+        radial-gradient(circle at 82% 75%, rgba(250, 204, 21, 0.08), transparent 42%);
+      color: #e2e8f0;
+      line-height: 1.65;
+      padding: 2.25rem 1rem 4rem;
     }
     .wrap { max-width: 880px; margin: 0 auto; }
-    .panel {
-      background: #fffdf9;
-      border: 3px solid #18181b;
-      border-radius: 16px;
-      box-shadow: 6px 6px 0 #18181b;
-      padding: 1.75rem;
+    header {
       margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #1e293b;
     }
-    header { text-align: center; background: #fef08a; }
-    .pill {
-      display: inline-block;
-      background: #18181b;
-      color: #fef08a;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      padding: 0.3rem 0.85rem;
-      border-radius: 999px;
-      margin-bottom: 0.75rem;
+    .kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #facc15;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      margin-bottom: 0.45rem;
     }
-    h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
-    h1 { font-size: clamp(1.75rem, 4vw, 2.4rem); margin-bottom: 0.45rem; }
-    h2 { font-size: 1.45rem; margin-bottom: 0.35rem; }
-    h3 { font-size: 1.1rem; color: #4338ca; margin: 1.35rem 0 0.4rem; }
-    .sub { color: #3f3f46; font-size: 0.96rem; max-width: 650px; margin: 0 auto; }
-    .sub-left { color: #52525b; font-size: 0.95rem; margin-bottom: 1rem; }
-    .bar {
+    h1 {
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      color: #f8fafc;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .lead {
+      color: #94a3b8;
+      font-size: 1.02rem;
+      max-width: 640px;
+    }
+    .panel {
+      background: #0f1629;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      padding: 1.6rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    }
+    h2 {
+      font-size: 1.35rem;
+      color: #f8fafc;
+      margin-bottom: 0.3rem;
+    }
+    h3 {
+      font-size: 1.05rem;
+      color: #38bdf8;
+      margin: 1.4rem 0 0.45rem;
+    }
+    .hint {
+      color: #94a3b8;
+      font-size: 0.92rem;
+      margin-bottom: 1.1rem;
+    }
+    .telemetry {
       display: flex;
       flex-wrap: wrap;
       gap: 0.6rem;
       justify-content: space-between;
       align-items: center;
-      background: #ede9fe;
-      border: 2.5px solid #18181b;
-      border-radius: 12px;
-      padding: 0.75rem 1rem;
+      background: #080d1a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 0.7rem 0.95rem;
       margin-bottom: 1rem;
     }
-    .btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 0.45rem; }
     button {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.86rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
       font-weight: 700;
-      padding: 0.45rem 0.95rem;
-      border-radius: 8px;
-      border: 2px solid #18181b;
-      background: #ffffff;
-      color: #18181b;
-      box-shadow: 2px 2px 0 #18181b;
+      padding: 0.45rem 0.85rem;
+      border-radius: 7px;
+      border: 1px solid #334155;
+      background: #131c33;
+      color: #cbd5e1;
       cursor: pointer;
-      transition: transform 0.1s ease;
+      transition: all 0.15s ease;
     }
-    button:active { transform: translate(2px, 2px); box-shadow: none; }
-    button.main-btn { background: #38bdf8; }
-    button.active { background: #facc15; }
-    .hud {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.92rem;
-      font-weight: 700;
-      background: #ffffff;
-      border: 2px solid #18181b;
-      padding: 0.35rem 0.8rem;
-      border-radius: 8px;
+    button:hover { border-color: #38bdf8; color: #f8fafc; }
+    button.reset {
+      background: #38bdf8;
+      color: #070913;
+      border-color: #38bdf8;
     }
-    .stage {
-      border: 3px solid #18181b;
-      border-radius: 12px;
+    button.active {
+      background: #facc15;
+      color: #070913;
+      border-color: #facc15;
+    }
+    .counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.84rem;
+      color: #94a3b8;
+    }
+    .counter strong { color: #facc15; }
+    .viewport {
+      border: 1px solid #334155;
+      border-radius: 10px;
       overflow: hidden;
-      background: #17153b;
+      background: #090c1d;
     }
-    canvas { display: block; width: 100%; height: auto; cursor: crosshair; }
-    .rationale p { color: #27272a; margin-bottom: 0.9rem; font-size: 0.97rem; }
-    .rationale ul { margin: 0.4rem 0 1.1rem 1.4rem; color: #27272a; }
-    .rationale li { margin-bottom: 0.4rem; }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      cursor: crosshair;
+    }
+    .notes p {
+      color: #cbd5e1;
+      margin-bottom: 0.95rem;
+      font-size: 0.96rem;
+    }
+    .notes ul {
+      margin: 0.4rem 0 1.2rem 1.35rem;
+      color: #cbd5e1;
+      font-size: 0.96rem;
+    }
+    .notes li { margin-bottom: 0.45rem; }
     code {
-      background: #f4f4f5;
-      border: 1px solid #d4d4d8;
-      padding: 0.1rem 0.35rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: #172038;
+      color: #7dd3fc;
+      padding: 0.12rem 0.35rem;
       border-radius: 4px;
-      font-size: 0.88em;
     }
-    .ref-link {
+    .doc-link {
       display: inline-block;
-      margin-top: 0.5rem;
-      background: #fef08a;
-      color: #18181b;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
+      margin-top: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.86rem;
+      color: #facc15;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border: 2px solid #18181b;
-      border-radius: 8px;
-      box-shadow: 3px 3px 0 #18181b;
+      border-bottom: 1px solid #facc15;
+      padding-bottom: 2px;
     }
-    footer { text-align: center; color: #52525b; font-size: 0.88rem; font-weight: 600; }
+    .doc-link:hover { opacity: 0.8; }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header class="panel">
-      <span class="pill">INTR 2012 · Assignment 3 Proof-of-Concept</span>
-      <h1>Lunar Asteroid Toss with Matter.js</h1>
-      <p class="sub">A cartoon 2D physics mini-game testing hexagonal rigid-body collisions, projectile trajectories, and low-gravity simulation in the browser.</p>
+    <header>
+      <div class="kicker">Matter.js · 2D Physics Sandbox</div>
+      <h1>Lunar Asteroid Toss</h1>
+      <p class="lead">A cartoon space mini-game exploring hexagonal rigid-body collisions, projectile trajectories, and adjustable gravity in the browser.</p>
     </header>
 
     <section class="panel">
-      <h2>1. Plugin Implementation: Moon Base Hex-Rock Smash</h2>
-      <p class="sub-left">Click and drag anywhere in space to aim the astronaut's launcher, then release to fire glowing yellow energy orbs at the grey hexagonal moon rocks.</p>
+      <h2>Moon Base Hex-Rock Smash</h2>
+      <p class="hint">Click and drag anywhere in space to aim the astronaut's launcher, then release to fire glowing yellow orbs at the grey moon rocks.</p>
 
-      <div class="bar">
-        <div class="btns">
-          <button class="main-btn" id="reset-btn">Reset Moon Rocks</button>
-          <button class="grav-btn active" data-g="0.35">Moon Gravity (0.35g)</button>
-          <button class="grav-btn" data-g="1">Earth Gravity (1.0g)</button>
-          <button class="grav-btn" data-g="0.05">Deep Space (0.05g)</button>
+      <div class="telemetry">
+        <div class="btn-row">
+          <button class="reset" id="reset-btn">Reset Rocks</button>
+          <button class="grav-btn active" data-g="0.35">Moon (0.35g)</button>
+          <button class="grav-btn" data-g="1">Earth (1.0g)</button>
+          <button class="grav-btn" data-g="0.05">Zero-G (0.05g)</button>
         </div>
-        <div class="hud">Orbs Fired: <span id="shots">0</span></div>
+        <div class="counter">ORBS FIRED: <strong id="shots">0</strong></div>
       </div>
 
-      <div class="stage">
+      <div class="viewport">
         <canvas id="game" width="820" height="420"></canvas>
       </div>
     </section>
 
-    <section class="panel rationale">
-      <h2>2. Design Rationale</h2>
+    <section class="panel notes">
+      <h2>Design Rationale</h2>
 
       <h3>Why I Chose Matter.js</h3>
       <p>
-        For this assignment, I wanted to build a playful browser mini-game without relying on heavy 3D tools like Three.js or A-Frame that we already explored in class. Writing realistic 2D collisions, angular rotation, and multi-sided polygon physics from scratch in vanilla JavaScript requires complex vector math, so I used <strong>Matter.js</strong>, a dedicated 2D rigid-body physics plugin.
+        I wanted to build a small playable game for this prototype without using heavy 3D frameworks like Three.js or A-Frame that we already covered in class. Writing polygon collisions, rotation, and bouncing from scratch in plain JavaScript takes a lot of vector math, so I used <strong>Matter.js</strong>, a lightweight 2D rigid-body physics library.
       </p>
       <p>
-        This proof-of-concept highlights three specific advantages of the library:
+        This demo focuses on three things Matter.js handles cleanly out of the box:
       </p>
       <ul>
-        <li><strong>Polygon &amp; Circle Collisions:</strong> Using <code>Matter.Bodies.polygon()</code> with six sides, the grey moon rocks tumble, interlock, and roll naturally when struck by circular yellow projectiles.</li>
-        <li><strong>Custom Cartoon Rendering Loop:</strong> By stepping the physics world with <code>Matter.Engine.update()</code> inside a standard HTML5 canvas loop, I was able to layer a cartoon astronaut, Earth in the background sky, and bold comic outlines on top of the physics bodies.</li>
-        <li><strong>Dynamic Gravity Controls:</strong> Adjusting <code>engine.gravity.y</code> through UI buttons lets players immediately feel the difference between low lunar gravity, Earth gravity, and near-weightless deep space.</li>
+        <li><strong>Multi-Sided Polygon Physics:</strong> Using <code>Matter.Bodies.polygon()</code> with six sides, the grey moon rocks stack, tumble, and roll realistically when hit by the yellow energy orbs.</li>
+        <li><strong>Custom Cartoon Canvas Loop:</strong> By updating the physics world with <code>Matter.Engine.update()</code> inside a standard HTML5 canvas loop, I could draw a cartoon astronaut, Earth in the sky, and cratered terrain right over the physics bodies.</li>
+        <li><strong>Live Gravity Switching:</strong> Changing <code>engine.gravity.y</code> through the top controls lets players immediately test how low lunar gravity compares to Earth gravity or deep space.</li>
       </ul>
 
-      <h3>Opportunities Beyond the Proof-of-Concept</h3>
+      <h3>Opportunities Beyond This Prototype</h3>
       <p>
-        While this prototype focuses on a single lunar sandbox stage, the same foundation could expand into a complete web application:
+        Right now this is a single sandbox stage, but the same setup could easily grow into a fuller web project:
       </p>
       <ul>
-        <li><strong>Ammo Limits &amp; Stage Progression:</strong> Tracking knocked-off rocks via Matter.js body coordinates would enable a three-star scoring system, limited energy orbs per round, and multi-stage planetary levels.</li>
-        <li><strong>Web Audio Sound Effects &amp; Particle Trails:</strong> Pairing Matter.js <code>collisionStart</code> events with synthesized retro sound effects and dust bursts would make impacts feel much more tactile.</li>
-        <li><strong>Interactive Science Education:</strong> A themed interface like this could help middle-school science students experiment with projectile velocity and planetary gravity in an approachable, game-like way.</li>
+        <li><strong>Ammo Limits &amp; Star Ratings:</strong> Checking how many hexagonal rocks get knocked off the platform would make it easy to add a limited orb count per round and unlock harder moon bases.</li>
+        <li><strong>Sound Effects &amp; Impact Dust:</strong> Listening to Matter.js <code>collisionStart</code> events could trigger synthesized retro sound effects and small dust particles whenever a rock hits the ground.</li>
+        <li><strong>Interactive Science Demos:</strong> A visual setup like this works well for introductory physics pages where users can experiment with launch angles and planetary gravity hands-on.</li>
       </ul>
 
-      <a class="ref-link" href="https://brm.io/matter-js/" target="_blank" rel="noopener">Official Plugin Docs: Matter.js &rarr;</a>
+      <a class="doc-link" href="https://brm.io/matter-js/" target="_blank" rel="noopener">Matter.js Documentation &rarr;</a>
     </section>
-
-    <footer>Assignment 3 · Interactive Web Development · GitHub Pages</footer>
   </div>
 
   <script>
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext('2d');
-    const W = canvas.width, H = canvas.height;
+    const W = canvas.width;
+    const H = canvas.height;
 
-    function initGame() {
+    function pill(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function bootGame() {
       const { Engine, Bodies, Body, Composite } = Matter;
       const engine = Engine.create();
       engine.gravity.y = 0.35;
 
-      const astro = { x: 135, y: H - 86, aimAngle: -0.45 };
+      const astro = { x: 135, y: H - 86, aimAngle: -0.42 };
       let aiming = false, dragStart = null, dragNow = null, shots = 0;
 
-      const stars = Array.from({ length: 42 }, (_, i) => ({
+      const stars = Array.from({ length: 46 }, (_, i) => ({
         x: (i * 89) % W,
-        y: 18 + ((i * 47) % 210),
-        r: i % 4 === 0 ? 2.2 : 1.2
+        y: 16 + ((i * 47) % 220),
+        r: i % 4 === 0 ? 2 : 1.1
       }));
 
-      function buildMoonScene() {
+      function buildScene() {
         Composite.clear(engine.world, false);
         shots = 0;
         document.getElementById('shots').textContent = shots;
 
-        // Curved/flat lunar ground body
         const ground = Bodies.rectangle(W / 2, H - 18, W + 60, 36, {
           isStatic: true,
           friction: 0.85
@@ -210,18 +255,98 @@
         const wallR = Bodies.rectangle(W + 25, H / 2, 50, H * 2, { isStatic: true });
         const wallL = Bodies.rectangle(-25, H / 2, 50, H * 2, { isStatic: true });
 
-        // Stack of grey hexagonal moon rocks
         const hexRocks = [];
-        const baseX = 520;
+        const baseX = 515;
         const floorY = H - 36;
         const radius = 26;
         const rowH = radius * 1.72;
-
         const rows = [4, 3, 2, 1];
+
         rows.forEach((count, r) => {
           const offsetX = r * (radius * 0.92);
           for (let c = 0; c < count; c++) {
             const x = baseX + offsetX + c * (radius * 1.88);
             const y = floorY - radius - r * rowH;
             const rock = Bodies.polygon(x, y, 6, radius, {
-              friction:
+              friction: 0.75,
+              restitution: 0.25,
+              density: 0.003
+            });
+            rock.kind = 'hexRock';
+            rock.shade = (r + c) % 2 === 0 ? '#94a3b8' : '#64748b';
+            hexRocks.push(rock);
+          }
+        });
+
+        Composite.add(engine.world, [ground, wallR, wallL, ...hexRocks]);
+      }
+
+      function shootOrb(vx, vy) {
+        const handX = astro.x + Math.cos(astro.aimAngle) * 34;
+        const handY = astro.y - 10 + Math.sin(astro.aimAngle) * 34;
+
+        const orb = Bodies.circle(handX, handY, 13, {
+          density: 0.0045,
+          restitution: 0.72,
+          friction: 0.2
+        });
+        orb.kind = 'yellowOrb';
+        Body.setVelocity(orb, { x: vx, y: vy });
+        Composite.add(engine.world, orb);
+
+        shots++;
+        document.getElementById('shots').textContent = shots;
+      }
+
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const cx = e.touches ? e.touches[0].clientX : e.clientX;
+        const cy = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: (cx - rect.left) * (W / rect.width),
+          y: (cy - rect.top) * (H / rect.height)
+        };
+      }
+
+      function onDown(e) {
+        aiming = true;
+        dragStart = getPos(e);
+        dragNow = dragStart;
+      }
+
+      function onMove(e) {
+        if (!aiming) return;
+        dragNow = getPos(e);
+        const dx = dragStart.x - dragNow.x;
+        const dy = dragStart.y - dragNow.y;
+        if (Math.hypot(dx, dy) > 6) {
+          astro.aimAngle = Math.max(-1.35, Math.min(0.35, Math.atan2(dy, dx)));
+        }
+      }
+
+      function onUp() {
+        if (!aiming) return;
+        aiming = false;
+        const dx = dragStart.x - dragNow.x;
+        const dy = dragStart.y - dragNow.y;
+        const power = Math.min(Math.hypot(dx, dy), 180);
+        const speed = power > 12 ? power * 0.14 : 16;
+        shootOrb(Math.cos(astro.aimAngle) * speed, Math.sin(astro.aimAngle) * speed);
+      }
+
+      canvas.addEventListener('mousedown', onDown);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
+      canvas.addEventListener('touchstart', (e) => { e.preventDefault(); onDown(e); }, { passive: false });
+      window.addEventListener('touchmove', onMove);
+      window.addEventListener('touchend', onUp);
+
+      function drawEarth() {
+        const ex = 675, ey = 90, er = 48;
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.18)';
+        ctx.beginPath(); ctx.arc(ex, ey, er + 11, 0, Math.PI * 2); ctx.fill();
+
+        ctx.save();
+        ctx.beginPath(); ctx.arc(ex, ey, er, 0, Math.PI * 2); ctx.clip();
+        ctx.fillStyle = '#0284c7';
+        ctx.fillRect(ex - er, ey
