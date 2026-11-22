@@ -3,86 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Assignment 3 — Matter.js Castle Siege Prototype</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <title>Assignment 3 — Matter.js Castle Siege</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/matter-js@0.19.0/build/matter.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0f172a;
-      color: #f1f5f9;
-      line-height: 1.6;
-      padding: 2rem 1rem 4rem;
-    }
+    body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f1f5f9; line-height: 1.6; padding: 2rem 1rem 4rem; }
     .container { max-width: 900px; margin: 0 auto; }
-    header, .card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 14px;
-      padding: 1.75rem;
-      margin-bottom: 1.75rem;
-    }
+    header, .card { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 1.75rem; margin-bottom: 1.75rem; }
     header { text-align: center; }
-    .tag {
-      display: inline-block;
-      background: #0ea5e922;
-      color: #38bdf8;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.3rem 0.8rem;
-      border-radius: 99px;
-      margin-bottom: 0.75rem;
-      text-transform: uppercase;
-    }
+    .tag { display: inline-block; background: #0ea5e922; color: #38bdf8; font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 99px; margin-bottom: 0.75rem; text-transform: uppercase; }
     h1 { font-size: 1.9rem; margin-bottom: 0.4rem; }
     h2 { font-size: 1.35rem; margin-bottom: 0.4rem; }
     h3 { font-size: 1.05rem; color: #38bdf8; margin: 1.25rem 0 0.4rem; }
     .muted { color: #94a3b8; font-size: 0.94rem; }
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: space-between;
-      align-items: center;
-      background: #0f172a;
-      padding: 0.8rem 1rem;
-      border-radius: 10px;
-      border: 1px solid #334155;
-      margin: 1rem 0;
-    }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: space-between; align-items: center; background: #0f172a; padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid #334155; margin: 1rem 0; }
     .btns { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-    button {
-      font-family: inherit;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 0.45rem 0.9rem;
-      border-radius: 7px;
-      border: 1px solid #334155;
-      background: #1e293b;
-      color: #f1f5f9;
-      cursor: pointer;
-    }
+    button { font-family: inherit; font-size: 0.85rem; font-weight: 600; padding: 0.45rem 0.9rem; border-radius: 7px; border: 1px solid #334155; background: #1e293b; color: #f1f5f9; cursor: pointer; }
     button:hover { border-color: #38bdf8; color: #38bdf8; }
     button.primary { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
     button.active { background: #fb7185; color: #fff; border-color: #fb7185; }
-    .stats { font-size: 0.88rem; color: #94a3b8; display: flex; gap: 1rem; }
+    .stats { font-size: 0.88rem; color: #94a3b8; }
     .stats strong { color: #f8fafc; }
-    .canvas-box {
-      width: 100%;
-      border: 1px solid #334155;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #0b132b;
-    }
-    canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      cursor: grab;
-    }
+    .canvas-box { width: 100%; border: 1px solid #334155; border-radius: 10px; overflow: hidden; background: #0b132b; }
+    canvas { display: block; width: 100%; height: auto; cursor: grab; }
     canvas:active { cursor: grabbing; }
     .rationale p { color: #cbd5e1; margin-bottom: 0.9rem; font-size: 0.96rem; }
     .rationale ul { margin: 0.4rem 0 1rem 1.3rem; color: #cbd5e1; font-size: 0.96rem; }
@@ -110,9 +54,7 @@
           <button class="grav-btn" data-g="0.25">Moon Gravity</button>
           <button class="grav-btn" data-g="-0.12">Zero-G</button>
         </div>
-        <div class="stats">
-          <span>Boulders Fired: <strong id="shots">0</strong></span>
-        </div>
+        <div class="stats">Boulders Fired: <strong id="shots">0</strong></div>
       </div>
 
       <div class="canvas-box">
@@ -122,14 +64,9 @@
 
     <section class="card rationale">
       <h2>2. Design Rationale</h2>
-
       <h3>Why I Chose Matter.js</h3>
-      <p>
-        For this assignment, I wanted to build a small interactive game without using a heavy 3D engine like Three.js or A-Frame. Coding gravity, bouncing, and block collisions from scratch in plain JavaScript takes a lot of math and time, so I chose <strong>Matter.js</strong>, a lightweight 2D physics library.
-      </p>
-      <p>
-        This prototype shows a few things Matter.js handles well out of the box:
-      </p>
+      <p>For this assignment, I wanted to build a small interactive game without using a heavy 3D engine like Three.js or A-Frame. Coding gravity, bouncing, and block collisions from scratch in plain JavaScript takes a lot of math and time, so I chose <strong>Matter.js</strong>, a lightweight 2D physics library.</p>
+      <p>This prototype shows a few things Matter.js handles well out of the box:</p>
       <ul>
         <li><strong>Slingshot Physics:</strong> Using <code>Matter.Constraint</code>, I attached the boulder to a giant wooden slingshot so users can pull and release it with elastic tension.</li>
         <li><strong>Realistic Castle Collisions:</strong> Each stone wall, wooden beam, and tower roof has its own weight and friction, so hitting the base naturally collapses the upper towers.</li>
@@ -137,5 +74,89 @@
       </ul>
 
       <h3>Opportunities Beyond This Prototype</h3>
-      <p>
-        Right
+      <p>Right now this is just a single-screen sandbox, but it could easily grow into a full browser game or interactive learning tool:</p>
+      <ul>
+        <li><strong>Levels and Scoring:</strong> By listening to Matter.js collision events, I could track when the golden royal crest falls to the ground, keep a real score, and load harder castle layouts.</li>
+        <li><strong>Custom Sprites and Sound:</strong> Instead of procedural canvas shapes, Matter.js allows loading PNG sprite sheets and adding stone-crumbling sound effects using the Web Audio API.</li>
+        <li><strong>Physics Learning Demos:</strong> A similar setup could be used on educational websites so students can test how mass, gravity, and launch angles affect projectile motion.</li>
+      </ul>
+      <p><a href="https://brm.io/matter-js/" target="_blank" rel="noopener">Plugin Reference: Matter.js Official Site &rarr;</a></p>
+    </section>
+
+    <footer>Assignment 3 · GitHub Pages Submission</footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('world-canvas');
+    const ctx = canvas.getContext('2d');
+    const W = 840, H = 440;
+
+    // Paint initial sky immediately so canvas is never blank
+    ctx.fillStyle = '#132240';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = '600 16px Inter, sans-serif';
+    ctx.fillText('Loading Matter.js physics engine...', 30, 50);
+
+    function startCastleGame() {
+      const { Engine, Bodies, Constraint, Composite, Mouse, MouseConstraint, Events } = Matter;
+      const engine = Engine.create();
+      const anchor = { x: 165, y: 270 };
+      let boulder, sling, isDragging = false, shots = 0;
+
+      const stars = Array.from({ length: 34 }, (_, i) => ({ x: (i * 97) % W, y: 22 + ((i * 53) % 175), r: i % 3 === 0 ? 1.8 : 1.1 }));
+      const dragon = { x: -70, y: 75, speed: 1.5, phase: 0 };
+
+      const mouse = Mouse.create(canvas);
+      const mouseConstraint = MouseConstraint.create(engine, { mouse: mouse, constraint: { stiffness: 0.2 } });
+
+      function syncMouse() {
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width > 0) Mouse.setScale(mouse, { x: W / rect.width, y: H / rect.height });
+      }
+      window.addEventListener('resize', syncMouse);
+
+      function makeBoulder() {
+        const b = Bodies.polygon(anchor.x, anchor.y, 9, 20, { density: 0.005, restitution: 0.55, friction: 0.7 });
+        b.kind = 'boulder';
+        return b;
+      }
+
+      function makeBlock(x, y, w, h, kind) {
+        const b = Bodies.rectangle(x, y, w, h, { friction: 0.75, restitution: 0.12, density: kind === 'wood' ? 0.0018 : 0.003 });
+        b.kind = kind;
+        return b;
+      }
+
+      function makeRoof(x, y, radius) {
+        const r = Bodies.polygon(x, y, 3, radius, { angle: -Math.PI / 2, friction: 0.6, restitution: 0.15 });
+        r.kind = 'roof';
+        return r;
+      }
+
+      function buildWorld() {
+        Composite.clear(engine.world, false);
+        shots = 0;
+        document.getElementById('shots').textContent = shots;
+
+        const floorY = H - 32;
+        const ground = Bodies.rectangle(W / 2, H - 16, W, 32, { isStatic: true });
+        ground.kind = 'ground';
+        const wallR = Bodies.rectangle(W + 20, H / 2, 40, H * 2, { isStatic: true });
+        const wallL = Bodies.rectangle(-20, H / 2, 40, H * 2, { isStatic: true });
+
+        boulder = makeBoulder();
+        sling = Constraint.create({ pointA: anchor, bodyB: boulder, stiffness: 0.055, length: 1 });
+
+        const castle = [
+          makeBlock(510, floorY - 35, 34, 70, 'darkStone'),
+          makeBlock(556, floorY - 35, 34, 70, 'darkStone'),
+          makeBlock(533, floorY - 82, 86, 24, 'stone'),
+          makeBlock(515, floorY - 122, 30, 56, 'stone'),
+          makeBlock(551, floorY - 122, 30, 56, 'stone'),
+          makeRoof(533, floorY - 168, 42),
+
+          makeBlock(625, floorY - 28, 86, 56, 'stone'),
+          makeBlock(625, floorY - 68, 108, 22, 'wood'),
+          makeBlock(595, floorY - 104, 26, 50, 'darkStone'),
+          makeBlock(655, floorY - 104, 2
