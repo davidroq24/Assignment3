@@ -3,237 +3,256 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Assignment 3 — Matter.js 2D Physics Game Proof-of-Concept</title>
+  <title>Assignment 3 — Matter.js Physics Prototype</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <!-- Matter.js 2D Physics Engine CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
   <style>
-    :root {
-      --bg: #0f172a;
-      --surface: #1e293b;
-      --surface-light: #273549;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-warm: #fb7185;
-      --border: #334155;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      color: var(--text-main);
-      line-height: 1.65;
-      padding: 2rem 1.25rem 4rem;
+      background: #0f172a;
+      color: #f1f5f9;
+      line-height: 1.6;
+      padding: 2rem 1rem 4rem;
     }
-
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
+    .container { max-width: 900px; margin: 0 auto; }
+    header, .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-bottom: 1.75rem;
     }
-
-    header {
-      text-align: center;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2.25rem 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .badge {
+    header { text-align: center; }
+    .tag {
       display: inline-block;
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--accent);
-      font-size: 0.78rem;
+      background: #0ea5e922;
+      color: #38bdf8;
+      font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 0.06em;
+      padding: 0.3rem 0.8rem;
+      border-radius: 99px;
+      margin-bottom: 0.75rem;
       text-transform: uppercase;
-      padding: 0.35rem 0.85rem;
-      border-radius: 999px;
-      margin-bottom: 0.8rem;
     }
-
-    h1, h2 {
-      font-family: 'Space Grotesk', sans-serif;
-    }
-
-    h1 {
-      font-size: clamp(1.85rem, 4vw, 2.6rem);
-      margin-bottom: 0.5rem;
-    }
-
-    header p {
-      color: var(--text-muted);
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    h2 {
-      font-size: 1.55rem;
-      margin-bottom: 0.4rem;
-    }
-
-    h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.15rem;
-      color: var(--accent);
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .subtitle {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--bg);
-      padding: 0.9rem 1.1rem;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      margin-bottom: 1.25rem;
-    }
-
-    .btn-group {
+    h1 { font-size: 1.9rem; margin-bottom: 0.4rem; }
+    h2 { font-size: 1.35rem; margin-bottom: 0.4rem; }
+    h3 { font-size: 1.05rem; color: #38bdf8; margin: 1.25rem 0 0.4rem; }
+    .muted { color: #94a3b8; font-size: 0.94rem; }
+    .controls {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f172a;
+      padding: 0.8rem 1rem;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      margin: 1rem 0;
     }
-
+    .btns { display: flex; flex-wrap: wrap; gap: 0.45rem; }
     button {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.86rem;
+      font-family: inherit;
+      font-size: 0.85rem;
       font-weight: 600;
-      padding: 0.55rem 1rem;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface-light);
-      color: var(--text-main);
+      padding: 0.45rem 0.9rem;
+      border-radius: 7px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #f1f5f9;
       cursor: pointer;
-      transition: all 0.18s ease;
     }
-
-    button:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    button.primary {
-      background: var(--accent);
-      color: #0f172a;
-      border-color: var(--accent);
-    }
-
-    button.primary:hover {
-      background: #7dd3fc;
-      color: #0f172a;
-    }
-
-    button.active {
-      background: var(--accent-warm);
-      color: #ffffff;
-      border-color: var(--accent-warm);
-    }
-
-    .hud {
-      display: flex;
-      gap: 1.5rem;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .hud strong {
-      color: var(--text-main);
-    }
-
+    button:hover { border-color: #38bdf8; color: #38bdf8; }
+    button.primary { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
+    button.active { background: #fb7185; color: #fff; border-color: #fb7185; }
+    .stats { font-size: 0.88rem; color: #94a3b8; display: flex; gap: 1rem; }
+    .stats strong { color: #f8fafc; }
     #game-container {
       width: 100%;
-      border-radius: 12px;
+      height: 420px;
+      background: #090d16;
+      border: 1px solid #334155;
+      border-radius: 10px;
       overflow: hidden;
-      border: 1px solid var(--border);
-      background: #0b1120;
       cursor: grab;
     }
-
-    #game-container:active {
-      cursor: grabbing;
-    }
-
-    #game-container canvas {
-      display: block;
-      width: 100% !important;
-      height: auto !important;
-    }
-
-    .rationale p {
-      color: #cbd5e1;
-      margin-bottom: 1rem;
-    }
-
-    .rationale ul {
-      margin: 0.6rem 0 1.25rem 1.4rem;
-      color: #cbd5e1;
-    }
-
-    .rationale li {
-      margin-bottom: 0.45rem;
-    }
-
-    .plugin-link {
-      display: inline-block;
-      margin-top: 0.5rem;
-      color: var(--accent);
-      font-weight: 600;
-      text-decoration: none;
-      border-bottom: 1px solid var(--accent);
-    }
-
-    footer {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
+    #game-container:active { cursor: grabbing; }
+    #game-container canvas { width: 100% !important; height: 100% !important; display: block; }
+    .rationale p { color: #cbd5e1; margin-bottom: 0.9rem; font-size: 0.96rem; }
+    .rationale ul { margin: 0.4rem 0 1rem 1.3rem; color: #cbd5e1; font-size: 0.96rem; }
+    .rationale li { margin-bottom: 0.35rem; }
+    a { color: #38bdf8; font-weight: 600; }
+    footer { text-align: center; color: #64748b; font-size: 0.85rem; }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <span class="badge">INTR 2012 · Assignment 3 Proof-of-Concept</span>
-      <h1>2D Rigid-Body Physics Mini-Game with Matter.js</h1>
-      <p>
-        An interactive browser physics sandbox demonstrating rigid-body collisions,
-        slingshot constraints, and real-time gravity manipulation using Matter.js.
-      </p>
+      <span class="tag">INTR 2012 · Assignment 3</span>
+      <h1>2D Physics Slingshot Game with Matter.js</h1>
+      <p class="muted">A simple interactive browser prototype testing rigid-body collisions, slingshot tension, and gravity changes.</p>
     </header>
 
-    <!-- COMPONENT 1: PLUGIN IMPLEMENTATION -->
-    <section class="card" aria-labelledby="game-title">
-      <h2 id="game-title">1. Plugin Implementation: Kinetic Tower Demolition</h2>
-      <p class="subtitle">
-        Pull back and release the glowing pink projectile on the left—or drag any block directly with your mouse—to topple the structure.
-      </p>
+    <section class="card">
+      <h2>1. Plugin Proof-of-Concept: Block Demolition</h2>
+      <p class="muted">Drag the pink ball back to launch it at the blocks, or grab any block directly with your mouse.</p>
 
-      <div class="toolbar">
+      <div class="controls">
+        <div class="btns">
+          <button class="primary" id="reset-btn">Reset Blocks</button>
+          <button class="grav-btn active" data-g="1">Normal Gravity</button>
+          <button class="grav-btn" data-g="0.25">Moon Gravity</button>
+          <button class="grav-btn" data-g="-0.15">Zero-G</button>
+        </div>
+        <div class="stats">
+          <span>Launches: <strong id="shots">0</strong></span>
+        </div>
+      </div>
+
+      <div id="game-container"></div>
+    </section>
+
+    <section class="card rationale">
+      <h2>2. Design Rationale</h2>
+
+      <h3>Why I Chose Matter.js</h3>
+      <p>
+        For this assignment, I wanted to build a small interactive game without using a heavy 3D engine like Three.js or A-Frame. Coding gravity, bouncing, and block collisions from scratch in plain JavaScript takes a lot of math and time, so I chose <strong>Matter.js</strong>, a lightweight 2D physics library.
+      </p>
+      <p>
+        This prototype shows a few things Matter.js handles well out of the box:
+      </p>
+      <ul>
+        <li><strong>Slingshot Physics:</strong> Using <code>Matter.Constraint</code>, I attached the projectile to a fixed point so users can pull and release it like an elastic band.</li>
+        <li><strong>Realistic Collisions:</strong> Each block has its own weight, friction, and bounce settings, so hitting the bottom row naturally knocks down the rest of the stack.</li>
+        <li><strong>Live Gravity Controls:</strong> By updating <code>engine.gravity.y</code> with simple buttons, the player can switch between normal Earth gravity, low Moon gravity, or floating zero-gravity in real time.</li>
+      </ul>
+
+      <h3>Opportunities Beyond This Prototype</h3>
+      <p>
+        Right now this is just a single-screen sandbox, but it could easily grow into a full browser game or interactive learning tool:
+      </p>
+      <ul>
+        <li><strong>Levels and Scoring:</strong> By listening to Matter.js collision events, I could track when the yellow target block hits the ground, keep a real score, and load harder block layouts.</li>
+        <li><strong>Custom Graphics and Sound:</strong> Instead of basic colored shapes, Matter.js allows replacing blocks with custom PNG sprites and adding impact sound effects using the Web Audio API.</li>
+        <li><strong>Physics Learning Demos:</strong> A similar setup could be used on educational websites so students can test how mass, gravity, and launch angles affect motion.</li>
+      </ul>
+
+      <p><a href="https://brm.io/matter-js/" target="_blank" rel="noopener">Plugin Reference: Matter.js Official Site &rarr;</a></p>
+    </section>
+
+    <footer>Assignment 3 · GitHub Pages Submission</footer>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof Matter === 'undefined') {
+        document.getElementById('game-container').innerHTML =
+          '<p style="padding:2rem;color:#fb7185;">Could not load Matter.js. Check your internet connection and refresh.</p>';
+        return;
+      }
+
+      const { Engine, Render, Runner, Bodies, Constraint, Composite, Mouse, MouseConstraint, Events } = Matter;
+      const box = document.getElementById('game-container');
+      const W = 840;
+      const H = 420;
+
+      const engine = Engine.create();
+      const render = Render.create({
+        element: box,
+        engine: engine,
+        options: { width: W, height: H, wireframes: false, background: '#090d16' }
+      });
+
+      Render.run(render);
+      Runner.run(Runner.create(), engine);
+
+      const anchor = { x: 170, y: 260 };
+      let ball, sling, isDragging = false, shots = 0;
+
+      const mouse = Mouse.create(render.canvas);
+      const mouseConstraint = MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: { stiffness: 0.2, render: { visible: false } }
+      });
+      render.mouse = mouse;
+
+      function makeBall() {
+        return Bodies.circle(anchor.x, anchor.y, 18, {
+          density: 0.004,
+          restitution: 0.65,
+          render: { fillStyle: '#fb7185', strokeStyle: '#fff', lineWidth: 2 }
+        });
+      }
+
+      function setupWorld() {
+        Composite.clear(engine.world, false);
+        shots = 0;
+        document.getElementById('shots').textContent = shots;
+
+        const floor = Bodies.rectangle(W / 2, H - 12, W, 24, { isStatic: true, render: { fillStyle: '#334155' } });
+        const wallR = Bodies.rectangle(W + 12, H / 2, 24, H, { isStatic: true });
+        const wallL = Bodies.rectangle(-12, H / 2, 24, H, { isStatic: true });
+
+        ball = makeBall();
+        sling = Constraint.create({
+          pointA: anchor,
+          bodyB: ball,
+          stiffness: 0.05,
+          length: 1,
+          render: { strokeStyle: '#38bdf8', lineWidth: 3 }
+        });
+
+        const blocks = [];
+        for (let r = 0; r < 4; r++) {
+          for (let c = 0; c < 3; c++) {
+            const isGold = r === 3 && c === 1;
+            blocks.push(
+              Bodies.rectangle(560 + c * 60, H - 48 - r * 50, 52, 48, {
+                friction: 0.6,
+                restitution: 0.2,
+                render: { fillStyle: isGold ? '#facc15' : '#38bdf8', strokeStyle: '#0f172a', lineWidth: 2 }
+              })
+            );
+          }
+        }
+
+        Composite.add(engine.world, [floor, wallR, wallL, ball, sling, ...blocks, mouseConstraint]);
+      }
+
+      Events.on(mouseConstraint, 'startdrag', (e) => {
+        if (e.body === ball) isDragging = true;
+      });
+
+      Events.on(mouseConstraint, 'enddrag', (e) => {
+        if (e.body === ball && isDragging) {
+          isDragging = false;
+          shots++;
+          document.getElementById('shots').textContent = shots;
+          setTimeout(() => { sling.bodyB = null; }, 25);
+          setTimeout(() => {
+            ball = makeBall();
+            sling.bodyB = ball;
+            Composite.add(engine.world, ball);
+          }, 1500);
+        }
+      });
+
+      document.getElementById('reset-btn').addEventListener('click', setupWorld);
+
+      document.querySelectorAll('.grav-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.grav-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          engine.gravity.y = parseFloat(btn.dataset.g);
+        });
+      });
+
+      setupWorld();
+    });
+  </script>
+</body>
+</html>
