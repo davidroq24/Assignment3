@@ -70,14 +70,59 @@
     button.active { background: #fb7185; color: #fff; border-color: #fb7185; }
     .stats { font-size: 0.88rem; color: #94a3b8; display: flex; gap: 1rem; }
     .stats strong { color: #f8fafc; }
-    #game-container {
+    .canvas-box {
       width: 100%;
-      height: 440px;
-      background: #0d172e;
       border: 1px solid #334155;
       border-radius: 10px;
       overflow: hidden;
+      background: #0b132b;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
       cursor: grab;
     }
-    #game-container:active { cursor: grabbing; }
-    #game-container canvas { width: 10
+    canvas:active { cursor: grabbing; }
+    .rationale p { color: #cbd5e1; margin-bottom: 0.9rem; font-size: 0.96rem; }
+    .rationale ul { margin: 0.4rem 0 1rem 1.3rem; color: #cbd5e1; font-size: 0.96rem; }
+    .rationale li { margin-bottom: 0.35rem; }
+    a { color: #38bdf8; font-weight: 600; }
+    footer { text-align: center; color: #64748b; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="tag">INTR 2012 · Assignment 3</span>
+      <h1>2D Castle Siege Physics Game with Matter.js</h1>
+      <p class="muted">An interactive browser prototype testing rigid-body castle structures, slingshot tension, custom canvas rendering, and gravity controls.</p>
+    </header>
+
+    <section class="card">
+      <h2>1. Plugin Proof-of-Concept: Castle Demolition</h2>
+      <p class="muted">Pull the boulder back on the giant wooden slingshot to smash the stone castle, or grab any castle block directly with your mouse.</p>
+
+      <div class="controls">
+        <div class="btns">
+          <button class="primary" id="reset-btn">Rebuild Castle</button>
+          <button class="grav-btn active" data-g="1">Normal Gravity</button>
+          <button class="grav-btn" data-g="0.25">Moon Gravity</button>
+          <button class="grav-btn" data-g="-0.12">Zero-G</button>
+        </div>
+        <div class="stats">
+          <span>Boulders Fired: <strong id="shots">0</strong></span>
+        </div>
+      </div>
+
+      <div class="canvas-box">
+        <canvas id="world-canvas" width="840" height="440"></canvas>
+      </div>
+    </section>
+
+    <section class="card rationale">
+      <h2>2. Design Rationale</h2>
+
+      <h3>Why I Chose Matter.js</h3>
+      <p>
+        For this assignment, I wanted to build a small interactive game without
