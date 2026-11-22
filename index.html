@@ -37,4 +37,58 @@
     p { margin-bottom: 0.9rem; color: #292524; }
     ul { margin: 0.4rem 0 1.1rem 1.3rem; color: #292524; }
     li { margin-bottom: 0.4rem; }
-    code { font-family: 'IBM Plex Mono', monospace; font-size: 0.85em;
+    code { font-family: 'IBM Plex Mono', monospace; font-size: 0.85em; background: #f4f1ea; padding: 0.1rem 0.35rem; border: 1px solid #d6d3d1; }
+    a { font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: #ea580c; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="meta">Matter.js 2D Physics Prototype</div>
+      <h1>Lunar Asteroid Toss</h1>
+      <p class="intro">A cartoon lunar physics game built with Matter.js to test hexagonal rigid-body collisions, projectile trajectories, and variable gravity.</p>
+    </header>
+
+    <section class="box">
+      <h2>Moon Base Hex-Rock Smash</h2>
+      <p class="desc">Click and drag anywhere in the sky to aim the astronaut's launcher, then release to fire yellow energy orbs at the grey hexagonal moon rocks.</p>
+
+      <div class="toolbar">
+        <div class="btns">
+          <button class="primary" id="reset-btn">Reset Rocks</button>
+          <button class="grav-btn active" data-g="0.35">Moon (0.35g)</button>
+          <button class="grav-btn" data-g="1">Earth (1.0g)</button>
+          <button class="grav-btn" data-g="0.05">Zero-G (0.05g)</button>
+        </div>
+        <div class="score">ORBS FIRED: <span id="shots">0</span></div>
+      </div>
+
+      <canvas id="game" width="800" height="400"></canvas>
+    </section>
+
+    <section class="box">
+      <h2>Design Rationale</h2>
+      <h3>Why I Chose Matter.js</h3>
+      <p>I wanted to build a small playable game for this prototype without using heavy 3D frameworks like Three.js or A-Frame that we already covered in class. Writing polygon collisions, rotation, and bouncing from scratch in plain JavaScript takes a lot of vector math, so I chose <strong>Matter.js</strong>, a lightweight 2D rigid-body physics library.</p>
+      <p>This demo focuses on three features Matter.js handles out of the box:</p>
+      <ul>
+        <li><strong>Multi-Sided Polygon Physics:</strong> Using <code>Matter.Bodies.polygon()</code> with six sides, the grey moon rocks stack, tumble, and roll naturally when struck by the yellow orbs.</li>
+        <li><strong>Custom Cartoon Canvas Loop:</strong> Stepping the physics simulation with <code>Matter.Engine.update()</code> inside a standard HTML5 canvas loop let me draw a cartoon astronaut, Earth in the background, and cratered lunar ground over the physics bodies.</li>
+        <li><strong>Live Gravity Switching:</strong> Changing <code>engine.gravity.y</code> with the toolbar buttons lets players immediately compare low lunar gravity against Earth gravity and near-zero gravity.</li>
+      </ul>
+
+      <h3>Opportunities Beyond This Prototype</h3>
+      <p>Right now this is a single sandbox stage, but the same setup could expand into a fuller web project:</p>
+      <ul>
+        <li><strong>Ammo Limits and Star Ratings:</strong> Checking how many hexagonal rocks get knocked off the platform would make it easy to add a limited orb count per round and unlock harder stages.</li>
+        <li><strong>Sound Effects and Dust Particles:</strong> Listening to Matter.js <code>collisionStart</code> events could trigger retro Web Audio sound effects and small dust puffs on impact.</li>
+        <li><strong>Interactive Science Demos:</strong> A visual setup like this works well for introductory physics pages where students can test launch angles and planetary gravity hands-on.</li>
+      </ul>
+
+      <p><a href="https://brm.io/matter-js/" target="_blank" rel="noopener">Matter.js Official Documentation &rarr;</a></p>
+    </section>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
